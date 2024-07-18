@@ -8,7 +8,7 @@ interface Props {
 }
 
 const MovableText: React.FC<Props> = ({ text, style, onClick }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({ x: 600, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const textRef = useRef<HTMLDivElement>(null);

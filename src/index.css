@@ -1,3 +1,6 @@
+
+
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -48,6 +51,7 @@ button {
 }
 button:hover {
   border-color: #646cff;
+  background-color: gainsboro;
 }
 button:focus,
 button:focus-visible {
@@ -65,4 +69,8 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.undoredo{
+  cursor: pointer;
 }

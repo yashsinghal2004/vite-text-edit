@@ -73,9 +73,9 @@ const TextEditor: React.FC = () => {
       ) : (
         <MovableText text={text} style={style} onClick={() => setIsEditing(true)} />
       )}
-      <div>
+      <div className='undoredo'>
         <button onClick={handleUndo} disabled={historyIndex === 0}>Undo</button>
-        <button onClick={handleRedo} disabled={historyIndex === history.length - 1}>Redo</button>
+        <button  onClick={handleRedo} disabled={historyIndex === history.length - 1}>Redo</button>
       </div>
     </div>
   );
