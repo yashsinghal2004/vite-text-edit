@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TextStyle } from '../types';
 
 interface TextProps {
@@ -8,26 +8,44 @@ interface TextProps {
 }
 
 const MovableText: React.FC<TextProps> = ({ text, style, onClick }) => {
-  const [position, setPosition] = useState({ x: 0 , y: 0 });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const textRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const h1Element = document.querySelector('h1');
+    if (h1Element) {
+      const rect = h1Element.getBoundingClientRect();
+      setPosition({ x: 0, y: rect.bottom + 10 }); // 10px below the h1
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) {
+        const newX = e.clientX - dragStart.x;
+        const newY = e.clientY - dragStart.y;
+        setPosition({ x: newX, y: newY });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, dragStart]);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isDragging) {
-      const newX = Math.max(0, Math.min(e.clientX - dragStart.x, window.innerWidth - (textRef.current?.offsetWidth || 0)));
-      const newY = Math.max(0, Math.min(e.clientY - dragStart.y, window.innerHeight - (textRef.current?.offsetHeight || 0)));
-      setPosition({ x: newX, y: newY });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -39,8 +57,8 @@ const MovableText: React.FC<TextProps> = ({ text, style, onClick }) => {
   const handleTouchMove = (e: React.TouchEvent) => {
     if (isDragging) {
       const touch = e.touches[0];
-      const newX = Math.max(0, Math.min(touch.clientX - dragStart.x, window.innerWidth - (textRef.current?.offsetWidth || 0)));
-      const newY = Math.max(0, Math.min(touch.clientY - dragStart.y, window.innerHeight - (textRef.current?.offsetHeight || 0)));
+      const newX = touch.clientX - dragStart.x;
+      const newY = touch.clientY - dragStart.y;
       setPosition({ x: newX, y: newY });
     }
   };
@@ -53,25 +71,22 @@ const MovableText: React.FC<TextProps> = ({ text, style, onClick }) => {
     <div
       ref={textRef}
       style={{
-        position: 'absolute',
+        position: 'fixed',
         left: `${position.x}px`,
         top: `${position.y}px`,
         cursor: 'move',
         userSelect: 'none',
-        touchAction: 'none', // This line prevents default touch actions
+        touchAction: 'none',
         ...style,
       }}
       onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp} // Handle mouse leaving the element
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      onTouchCancel={handleTouchEnd} // Handle touch cancellation
+      onTouchCancel={handleTouchEnd}
       onClick={onClick}
     >
-      {text}
+      {text || 'Edit me!'}
     </div>
   );
 };
