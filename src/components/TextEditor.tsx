@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import MovableText from './MovableText';
 import { TextState, TextStyle } from '../types';
+import WebFont from 'webfontloader';
 
 const TextEditor: React.FC = () => {
   const [text, setText] = useState<string>('Edit me!');
@@ -12,6 +13,28 @@ const TextEditor: React.FC = () => {
   const [history, setHistory] = useState<TextState[]>([{ text, style }]);
   const [historyIndex, setHistoryIndex] = useState<number>(0);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [loadedFonts, setLoadedFonts] = useState<string[]>([]);
+
+  const fonts = [
+    'Arial', 'Verdana', 'Times New Roman', 'Courier New', 'Georgia', 'Palatino', 
+    'Garamond', 'Bookman', 'Comic Sans MS', 'Trebuchet MS', 'Arial Black', 
+    'Impact', 'Lucida Sans Unicode', 'Tahoma', 'Lucida Console', 'Courier', 
+    'Brush Script MT', 'Century Gothic'
+  ];
+
+  useEffect(() => {
+    WebFont.load({
+      google: {
+        families: fonts.filter(font => !['Arial', 'Verdana', 'Times New Roman', 'Courier New', 'Georgia'].includes(font))
+      },
+      active: () => {
+        setLoadedFonts(fonts);
+      },
+      inactive: () => {
+        console.log('Some fonts failed to load');
+      }
+    });
+  }, []);
 
   const updateHistory = useCallback((newText: string, newStyle: TextStyle) => {
     const newState: TextState = { text: newText, style: newStyle };
@@ -48,13 +71,6 @@ const TextEditor: React.FC = () => {
     }
   };
 
-  const fonts = [
-    'Arial', 'Verdana', 'Times New Roman', 'Courier New', 'Georgia', 'Palatino', 
-    'Garamond', 'Bookman', 'Comic Sans MS', 'Trebuchet MS', 'Arial Black', 
-    'Impact', 'Lucida Sans Unicode', 'Tahoma', 'Lucida Console', 'Courier', 
-    'Brush Script MT', 'Century Gothic'
-  ];
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
       <div style={{ position: 'relative', width: '300px', height: '200px', marginBottom: '20px' }}>
@@ -66,8 +82,8 @@ const TextEditor: React.FC = () => {
                 onChange={(e) => handleStyleChange('fontFamily', e.target.value)} 
                 style={{ marginRight: '5px', maxHeight: '100px', overflowY: 'scroll' }}
               >
-                {fonts.map(font => (
-                  <option key={font} value={font}>{font}</option>
+                {loadedFonts.map(font => (
+                  <option key={font} value={font} style={{ fontFamily: font }}>{font}</option>
                 ))}
               </select>
               <input
@@ -90,7 +106,7 @@ const TextEditor: React.FC = () => {
         )}
       </div>
       <div>
-        <button onClick={handleUndo} disabled={historyIndex === 0} >Undo</button>
+        <button onClick={handleUndo} disabled={historyIndex === 0}>Undo</button>
         <button onClick={handleRedo} disabled={historyIndex === history.length - 1}>Redo</button>
       </div>
     </div>
