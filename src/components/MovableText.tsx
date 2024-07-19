@@ -17,7 +17,7 @@ const MovableText: React.FC<TextProps> = ({ text, style, onClick }) => {
     const h1Element = document.querySelector('h1');
     if (h1Element) {
       const rect = h1Element.getBoundingClientRect();
-      setPosition({ x: 0, y: rect.bottom + 10 }); // 10px below the h1
+      setPosition({ x: 20, y: rect.bottom + 10 }); // 10px below the h1
     }
   }, []);
 
