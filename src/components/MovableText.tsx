@@ -71,7 +71,7 @@ const MovableText: React.FC<TextProps> = ({ text, style, onClick }) => {
     <div
       ref={textRef}
       style={{
-        position: 'fixed',
+        position: 'absolute',
         left: `${position.x}px`,
         top: `${position.y}px`,
         cursor: 'move',

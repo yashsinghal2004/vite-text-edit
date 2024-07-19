@@ -69,13 +69,13 @@ const TextEditor: React.FC = () => {
             <input 
               value={text} 
               onChange={handleTextChange} 
-              style={{ marginBottom: '10px', width: '100%', fontSize: '16px' }} 
+              style={{ marginBottom: '10px', width: '100%', fontSize: '16px', fontFamily: style.fontFamily }} 
             />
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <select 
                 value={style.fontFamily}
                 onChange={(e) => handleStyleChange('fontFamily', e.target.value)} 
-                style={{ width: '100%', height: '40px', fontSize: '16px' }}
+                style={{ width: '100%', height: '40px', fontSize: '16px', fontFamily: style.fontFamily }}
               >
                 {fonts.map(font => (
                   <option key={font} value={font} style={{ fontFamily: font }}>{font}</option>
