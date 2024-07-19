@@ -55,34 +55,52 @@ const TextEditor: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-      <div style={{ position: 'relative', width: '300px', height: '200px', marginBottom: '20px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', padding: '10px' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: '300px', minHeight: '200px', marginBottom: '20px' }}>
         {isEditing ? (
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <input value={text} onChange={handleTextChange} style={{ marginBottom: '10px' }} />
-            <div>
+          <div style={{ 
+            position: 'absolute', 
+            top: '50%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)',
+            width: '100%',
+            maxWidth: '280px'
+          }}>
+            <input 
+              value={text} 
+              onChange={handleTextChange} 
+              style={{ marginBottom: '10px', width: '100%', fontSize: '16px' }} 
+            />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <select 
                 value={style.fontFamily}
                 onChange={(e) => handleStyleChange('fontFamily', e.target.value)} 
-                style={{ marginRight: '5px', maxHeight: '100px', overflowY: 'scroll' }}
+                style={{ width: '100%', height: '40px', fontSize: '16px' }}
               >
                 {fonts.map(font => (
                   <option key={font} value={font} style={{ fontFamily: font }}>{font}</option>
                 ))}
               </select>
-              <input
-                type="number"
-                value={parseInt(style.fontSize)}
-                onChange={(e) => handleStyleChange('fontSize', `${e.target.value}px`)}
-                style={{ width: '50px', marginRight: '5px' }}
-              />
-              <input
-                type="color"
-                value={style.color}
-                onChange={(e) => handleStyleChange('color', e.target.value)}
-                style={{ marginRight: '5px' }}
-              />
-              <button onClick={() => setIsEditing(false)}>Done</button>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <input
+                  type="number"
+                  value={parseInt(style.fontSize)}
+                  onChange={(e) => handleStyleChange('fontSize', `${e.target.value}px`)}
+                  style={{ width: '60px', height: '40px', fontSize: '16px' }}
+                />
+                <input
+                  type="color"
+                  value={style.color}
+                  onChange={(e) => handleStyleChange('color', e.target.value)}
+                  style={{ width: '60px', height: '40px' }}
+                />
+                <button 
+                  onClick={() => setIsEditing(false)}
+                  style={{ height: '40px', fontSize: '16px', padding: '0 15px' }}
+                >
+                  Done
+                </button>
+              </div>
             </div>
           </div>
         ) : (
@@ -90,8 +108,20 @@ const TextEditor: React.FC = () => {
         )}
       </div>
       <div>
-        <button onClick={handleUndo} disabled={historyIndex === 0}>Undo</button>
-        <button onClick={handleRedo} disabled={historyIndex === history.length - 1}>Redo</button>
+        <button 
+          onClick={handleUndo} 
+          disabled={historyIndex === 0}
+          style={{ fontSize: '16px', padding: '10px 15px', marginRight: '10px' }}
+        >
+          Undo
+        </button>
+        <button 
+          onClick={handleRedo} 
+          disabled={historyIndex === history.length - 1}
+          style={{ fontSize: '16px', padding: '10px 15px' }}
+        >
+          Redo
+        </button>
       </div>
     </div>
   );
