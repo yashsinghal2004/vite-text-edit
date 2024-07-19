@@ -3,7 +3,7 @@ import MovableText from './MovableText';
 import { TextState, TextStyle } from '../types';
 
 const TextEditor: React.FC = () => {
-  const [text, setText] = useState<string>('Edit this text!');
+  const [text, setText] = useState<string>('Edit me!');
   const [style, setStyle] = useState<TextStyle>({
     fontFamily: 'Arial',
     fontSize: '16px',
@@ -48,34 +48,50 @@ const TextEditor: React.FC = () => {
     }
   };
 
+  const fonts = [
+    'Arial', 'Verdana', 'Times New Roman', 'Courier New', 'Georgia', 'Palatino', 
+    'Garamond', 'Bookman', 'Comic Sans MS', 'Trebuchet MS', 'Arial Black', 
+    'Impact', 'Lucida Sans Unicode', 'Tahoma', 'Lucida Console', 'Courier', 
+    'Brush Script MT', 'Century Gothic'
+  ];
+
   return (
-    <div>
-      {isEditing ? (
-        <div>
-          <input value={text} onChange={handleTextChange} />
-          <select onChange={(e) => handleStyleChange('fontFamily', e.target.value)}>
-            <option value="Arial">Arial</option>
-            <option value="Verdana">Verdana</option>
-            <option value="Times New Roman">Times New Roman</option>
-          </select>
-          <input
-            type="number"
-            value={parseInt(style.fontSize)}
-            onChange={(e) => handleStyleChange('fontSize', `${e.target.value}px`)}
-          />
-          <input
-            type="color"
-            value={style.color}
-            onChange={(e) => handleStyleChange('color', e.target.value)}
-          />
-          <button onClick={() => setIsEditing(false)}>Done</button>
-        </div>
-      ) : (
-        <MovableText text={text} style={style} onClick={() => setIsEditing(true)} />
-      )}
-      <div className='undoredo'>
-        <button onClick={handleUndo} disabled={historyIndex === 0}>Undo</button>
-        <button  onClick={handleRedo} disabled={historyIndex === history.length - 1}>Redo</button>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+      <div style={{ position: 'relative', width: '300px', height: '200px', marginBottom: '20px' }}>
+        {isEditing ? (
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+            <input value={text} onChange={handleTextChange} style={{ marginBottom: '10px' }} />
+            <div>
+              <select 
+                onChange={(e) => handleStyleChange('fontFamily', e.target.value)} 
+                style={{ marginRight: '5px', maxHeight: '100px', overflowY: 'scroll' }}
+              >
+                {fonts.map(font => (
+                  <option key={font} value={font}>{font}</option>
+                ))}
+              </select>
+              <input
+                type="number"
+                value={parseInt(style.fontSize)}
+                onChange={(e) => handleStyleChange('fontSize', `${e.target.value}px`)}
+                style={{ width: '50px', marginRight: '5px' }}
+              />
+              <input
+                type="color"
+                value={style.color}
+                onChange={(e) => handleStyleChange('color', e.target.value)}
+                style={{ marginRight: '5px' }}
+              />
+              <button onClick={() => setIsEditing(false)}>Done</button>
+            </div>
+          </div>
+        ) : (
+          <MovableText text={text} style={style} onClick={() => setIsEditing(true)} />
+        )}
+      </div>
+      <div>
+        <button onClick={handleUndo} disabled={historyIndex === 0} >Undo</button>
+        <button onClick={handleRedo} disabled={historyIndex === history.length - 1}>Redo</button>
       </div>
     </div>
   );
