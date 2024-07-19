@@ -6,7 +6,7 @@ const TextEditor: React.FC = () => {
   const [text, setText] = useState<string>('Edit me!');
   const [style, setStyle] = useState<TextStyle>({
     fontFamily: 'Arial',
-    fontSize: '20px',
+    fontSize: '32px',
     color: '#808080',
   });
   const [history, setHistory] = useState<TextState[]>([{ text, style }]);
